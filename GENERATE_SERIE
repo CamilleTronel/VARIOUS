@@ -1,0 +1,43 @@
+def generate_index(N):
+    if N == 0:
+        return [[numpy.array([0, 0, 0, 0])]]
+    elif N == 1:
+        return [[numpy.array([0, 0, 0, 0])], [numpy.array([1, 0, 0, 0]), numpy.array([0, 1, 0, 0]), numpy.array([0, 0, 1, 0]), numpy.array([0, 0, 0, 1])]]
+    else:
+        list = generate_index(N-1)
+        result = []
+        for point in list[-1]:
+            if (point[1] == 0) and (point[2] == 0) and (point[3] == 0):
+                result.append(point+numpy.array([1, 0, 0, 0]))
+            else:
+                result.append(point+numpy.array([1, 0, 0, 0]))
+                result.append(point+numpy.array([0, 1, 0, 0]))
+                result.append(point+numpy.array([0, 0, 1, 0]))
+                result.append(point+numpy.array([0, 0, 0, 1]))
+        return list+[result]
+
+
+a = 10
+
+
+def generate_coeff(N):
+    if N == 0:
+        return [[random.uniform(-a, a)]]
+    if N == 1:
+        return [[random.uniform(-a, a)], [random.uniform(-a, a), random.uniform(-a, a), random.uniform(-a, a), random.uniform(-a, a)]]
+    else:
+        list = generate_coeff(N-1)
+        result = [random.uniform(-a, a)]
+        for point in list[-1][1:]:
+            result.append(random.uniform(-a, a))
+            result.append(random.uniform(-a, a))
+            result.append(random.uniform(-a, a))
+            result.append(random.uniform(-a, a))
+        return list+[result]
+
+
+def generate_function(N):
+    I = generate_index(N)
+    C = generate_coeff(N)
+    s = sum([sum(C[j])for j in range(N)])
+    return lambda x, y, z, t: 1/s*sum([sum([C[j][k]*pow(x, I[j][k][0])*pow(x, I[j][k][1])*pow(x, I[j][k][2])*pow(x, I[j][k][3]) for k in range(j)])for j in range(N)])
